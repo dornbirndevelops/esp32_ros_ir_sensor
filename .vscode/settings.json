@@ -1,0 +1,14 @@
+{
+  "C_Cpp.clang_format_style": "Visual Studio",
+  "editor.formatOnSave": false,
+  "[cpp]": {
+    "editor.quickSuggestions": true
+  },
+  "[c]": {
+    "editor.quickSuggestions": true
+  },
+  "C_Cpp.intelliSenseEngineFallback": "Enabled",
+  "python.pythonPath": "/home/alex/.asdf/installs/python/3.8.3/bin/python",
+  "cmake.configureOnOpen": true,
+  "idf.port": "/dev/ttyUSB0"
+}
