@@ -1,12 +1,11 @@
 #include <ros.h>
 #include <ros/time.h>
 #include <sensor_msgs/Range.h>
-
 #include <driver/adc.h>
-
 #include <vector>
 #include <utility>
 #include <string>
+#include "sensor_node.h"
 
 #define NO_OF_SAMPLES 64
 

@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
-void rosserial_setup();
+void rosserial_setup(void);
 
-void rosserial_publish();
+void rosserial_publish(void);
 
 #ifdef __cplusplus
 }

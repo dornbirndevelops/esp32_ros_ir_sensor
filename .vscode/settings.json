@@ -8,7 +8,6 @@
     "editor.quickSuggestions": true
   },
   "C_Cpp.intelliSenseEngineFallback": "Enabled",
-  "python.pythonPath": "/home/alex/.asdf/installs/python/3.8.3/bin/python",
-  "cmake.configureOnOpen": true,
+  "python.pythonPath": "/home/alex/.asdf/installs/python/3.8.2/bin/python",
   "idf.port": "/dev/ttyUSB0"
 }
