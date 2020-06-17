@@ -22,11 +22,6 @@ std::vector<std::pair<std::string, adc1_channel_t> > sensors = {
   std::make_pair("bar", ADC1_CHANNEL_6)
 };
 
-long map(long x, long in_min, long in_max, long out_min, long out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
 float read_range(adc1_channel_t channel)
 {
   // Multisampling with median
