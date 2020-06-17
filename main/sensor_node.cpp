@@ -5,9 +5,13 @@
 #include <vector>
 #include <utility>
 #include <string>
+#include <algorithm>
 #include "sensor_node.h"
 
-#define NO_OF_SAMPLES 64
+#define NO_OF_SAMPLES 65
+#define A 0.00003047956374f
+#define B 0.004288992178f
+#define K 1.5f
 
 ros::NodeHandle nh;
 
@@ -15,7 +19,6 @@ sensor_msgs::Range range_msg;
 ros::Publisher range_publisher("ir_data", &range_msg);
 
 std::vector<std::pair<std::string, adc1_channel_t> > sensors = {
-  std::make_pair("foo", ADC1_CHANNEL_6),
   std::make_pair("bar", ADC1_CHANNEL_6)
 };
 
@@ -26,14 +29,15 @@ long map(long x, long in_min, long in_max, long out_min, long out_max)
 
 float read_range(adc1_channel_t channel)
 {
-  uint32_t adc_reading = 0;
-  //Multisampling
+  // Multisampling with median
+  int raw_samples[NO_OF_SAMPLES];
   for (int i = 0; i < NO_OF_SAMPLES; i++) {
-    adc_reading += adc1_get_raw(channel);
+    raw_samples[i] = adc1_get_raw(channel);
   }
-  adc_reading /= NO_OF_SAMPLES;
+  std::sort(raw_samples, raw_samples+NO_OF_SAMPLES);
+  auto adc_value = raw_samples[NO_OF_SAMPLES/2];
 
-  return 29.988 * pow(map(adc_reading, 0, 4095, 0, 5000)/1000.0, -1.173);
+  return (1 / (A * adc_value + B) - K) / 100;
 }
 
 void rosserial_setup()
