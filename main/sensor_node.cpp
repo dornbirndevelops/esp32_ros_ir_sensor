@@ -7,7 +7,9 @@
 #include <string>
 #include <algorithm>
 #include "sensor_node.h"
+#include "esp_system.h"
 
+#define MAX_FAILED_ATTEMPTS 10
 #define CALIBRATE 0
 #define NO_OF_SAMPLES 65
 #define SENSOR_RING 6
@@ -48,6 +50,7 @@ ros::NodeHandle nh;
 
 sensor_msgs::Range range_msg;
 ros::Publisher range_publisher("sensor_data", &range_msg);
+int failed_attempts = 0;
 
 void rosserial_setup()
 {
@@ -70,6 +73,12 @@ void rosserial_setup()
 
 void rosserial_publish()
 {
+  if (nh.connected()) {
+    failed_attempts = 0;
+  } else if (++failed_attempts > MAX_FAILED_ATTEMPTS) {
+    esp_restart();
+  }
+
   for(auto i = sensors.begin(); i < sensors.end(); i++) {
     // Fill dynamic message data
     // Multisampling with median
