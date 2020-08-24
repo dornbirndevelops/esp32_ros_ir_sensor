@@ -10,7 +10,12 @@
 
 #define CALIBRATE 0
 #define NO_OF_SAMPLES 65
-#define RING 6
+#define SENSOR_RING 6
+
+#define GPIO32 ADC1_CHANNEL_4
+#define GPIO33 ADC1_CHANNEL_5
+#define GPIO34 ADC1_CHANNEL_6
+#define GPIO35 ADC1_CHANNEL_7
 
 typedef struct {
   std::string frame;
@@ -20,40 +25,29 @@ typedef struct {
   float K;
 } sensor_t;
 
-/*
-ADC1 channel 0 is GPIO36
-ADC1 channel 1 is GPIO37
-ADC1 channel 2 is GPIO38
-ADC1 channel 3 is GPIO39
-ADC1 channel 4 is GPIO32
-ADC1 channel 5 is GPIO33
-ADC1 channel 6 is GPIO34
-ADC1 channel 7 is GPIO35
-*/
-
-// {"ring_4_back", ADC1_CHANNEL_7, 0.0000315383707f, 0.002978491566f, 1.5f}, best sensor so far
+// {"sensor_4_back", GPIO35, 0.0000315383707f, 0.002978491566f, 1.5f}, best sensor so far
 
 std::vector<sensor_t> sensors = {
-#if RING == 2
-  {"ring_2_front", ADC1_CHANNEL_6, 0.00003096556491f, 0.004266254642f, 2.1f},
-  {"ring_2_left", ADC1_CHANNEL_5, 0.00003276791572f, 0.00284869739f, 0.9f},
-  {"ring_2_back", ADC1_CHANNEL_4, 0.00003344496413f, 0.002923084849f, 0.9f},
-  {"ring_2_right", ADC1_CHANNEL_7, 0.00003138671844f, 0.004107259821f, 1.5f},
-#elif RING == 4
-  {"ring_4_front", ADC1_CHANNEL_5, 0.00003043101771f, 0.002900329139f, 1.5f},
-  {"ring_4_left", ADC1_CHANNEL_4, 0.00003110156825f, 0.002753638173f, 1.5f},
-  {"ring_4_back", ADC1_CHANNEL_7, 0.0000315383707f, 0.002978491566f, 1.5f},
-  {"ring_4_right", ADC1_CHANNEL_6, 0.00003096265037f, 0.002803218224f, 1.5f},
-#elif RING == 6
-  {"ring_6_front_right", ADC1_CHANNEL_6, 0.00002897696896f, 0.003815309638f, 1.5f},
-  {"ring_6_front_left", ADC1_CHANNEL_7, 0.0000282914602f, 0.002773656281f, 2.0f},
+#if SENSOR_RING == 2
+  {"sensor_2_front", GPIO34, 0.00003096556491f, 0.004266254642f, 2.1f},
+  {"sensor_2_left", GPIO33, 0.00003276791572f, 0.00284869739f, 0.9f},
+  {"sensor_2_back", GPIO32, 0.00003344496413f, 0.002923084849f, 0.9f},
+  {"sensor_2_right", GPIO35, 0.00003138671844f, 0.004107259821f, 1.5f},
+#elif SENSOR_RING == 4
+  {"sensor_4_front", GPIO33, 0.00003043101771f, 0.002900329139f, 1.5f},
+  {"sensor_4_left", GPIO32, 0.00003110156825f, 0.002753638173f, 1.5f},
+  {"sensor_4_back", GPIO35, 0.0000315383707f, 0.002978491566f, 1.5f},
+  {"sensor_4_right", GPIO34, 0.00003096265037f, 0.002803218224f, 1.5f},
+#elif SENSOR_RING == 6
+  {"sensor_6_front_right", GPIO34, 0.00002897696896f, 0.003815309638f, 1.5f},
+  {"sensor_6_front_left", GPIO35, 0.0000282914602f, 0.002773656281f, 2.0f},
 #endif
 };
 
 ros::NodeHandle nh;
 
 sensor_msgs::Range range_msg;
-ros::Publisher range_publisher("ir_data", &range_msg);
+ros::Publisher range_publisher("sensor_data", &range_msg);
 
 void rosserial_setup()
 {
