@@ -12,4 +12,5 @@ The contained source code is used to deliver distance values from a few connecte
 * unzip `rosserial_esp32.zip` in `$IDF_PATH/components` where $IDF_PATH is the installation path for ESP-IDF.
 * load project
 * connect an ESP32 Device to program
+* make sure your user has the rights of the `dialout` group
 * build, flash and monitor it
