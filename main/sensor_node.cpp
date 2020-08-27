@@ -9,16 +9,14 @@
 #include <esp_system.h>
 #include "sensor_node.h"
 
-#define MAX_FAILED_ATTEMPTS 10
-#define CALIBRATE 0
-#define NO_OF_SAMPLES 65
-#define SENSOR_RING 2
-#define LOW_PASS 0.45
-
-#define GPIO32 ADC1_CHANNEL_4
-#define GPIO33 ADC1_CHANNEL_5
-#define GPIO34 ADC1_CHANNEL_6
-#define GPIO35 ADC1_CHANNEL_7
+// configuration defines
+#define CALIBRATE 0 // 1 use raw sensor values, 0 use distances
+#define SENSOR_RING 2 // which sensors to use
+#define MAX_FAILED_ATTEMPTS 10 // try to publish x times before restarting the esp
+#define NO_OF_SAMPLES 65 // get this amount of samples per sensor
+#define LOW_PASS 0.45 // distance value defining the maximum reliable value
+#define ADC_WIDTH ADC_WIDTH_BIT_9 // adc resolution value
+#define ADC_ATTEN_DB ADC_ATTEN_DB_11 // adc attenuation value
 
 typedef struct {
   std::string frame;
@@ -32,18 +30,18 @@ typedef struct {
 
 std::vector<sensor_t> sensors = {
 #if SENSOR_RING == 2
-  {"sensor_2_front", GPIO34, 0.00003095630509, 0.003538019272, 1.6},
-  {"sensor_2_left", GPIO33, 0.00003276791572, 0.00284869739, 0.9},
-  {"sensor_2_back", GPIO32, 0.00003344496413, 0.002923084849, 0.9},
-  {"sensor_2_right", GPIO35, 0.00003138671844, 0.004107259821, 1.5},
+  {"sensor_2_front", ADC1_GPIO34_CHANNEL, 0.00003095630509, 0.003538019272, 1.6},
+  {"sensor_2_left", ADC1_GPIO33_CHANNEL, 0.00003276791572, 0.00284869739, 0.9},
+  {"sensor_2_back", ADC1_GPIO32_CHANNEL, 0.00003344496413, 0.002923084849, 0.9},
+  {"sensor_2_right", ADC1_GPIO35_CHANNEL, 0.00003138671844, 0.004107259821, 1.5},
 #elif SENSOR_RING == 4
-  {"sensor_4_front", GPIO33, 0.00003043101771, 0.002900329139, 1.5},
-  {"sensor_4_left", GPIO32, 0.00003110156825, 0.002753638173, 1.5},
-  {"sensor_4_back", GPIO35, 0.0000315383707, 0.002978491566, 1.5},
-  {"sensor_4_right", GPIO34, 0.00003096265037, 0.002803218224, 1.5},
+  {"sensor_4_front", ADC1_GPIO33_CHANNEL, 0.00003043101771, 0.002900329139, 1.5},
+  {"sensor_4_left", ADC1_GPIO32_CHANNEL, 0.00003110156825, 0.002753638173, 1.5},
+  {"sensor_4_back", ADC1_GPIO35_CHANNEL, 0.0000315383707, 0.002978491566, 1.5},
+  {"sensor_4_right", ADC1_GPIO34_CHANNEL, 0.00003096265037, 0.002803218224, 1.5},
 #elif SENSOR_RING == 6
-  {"sensor_6_front_right", GPIO34, 0.00002897696896, 0.003815309638, 1.5},
-  {"sensor_6_front_left", GPIO35, 0.0000282914602, 0.002773656281, 2.0},
+  {"sensor_6_front_right", ADC1_GPIO34_CHANNEL, 0.00002897696896, 0.003815309638, 1.5},
+  {"sensor_6_front_left", ADC1_GPIO35_CHANNEL, 0.0000282914602, 0.002773656281, 2.0},
 #endif
 };
 
@@ -51,7 +49,7 @@ ros::NodeHandle nh;
 
 sensor_msgs::Range range_msg;
 ros::Publisher range_publisher("sensor_data", &range_msg);
-int failed_attempts = 0;
+unsigned int failed_attempts = 0;
 
 void rosserial_setup()
 {
@@ -66,9 +64,9 @@ void rosserial_setup()
   range_msg.max_range = 0.8;
 
   // Initialize ADC
-  adc1_config_width(ADC_WIDTH_BIT_9);
+  adc1_config_width(ADC_WIDTH);
   for(auto i = sensors.begin(); i < sensors.end(); i++) {
-    adc1_config_channel_atten(i->pin,ADC_ATTEN_DB_11);
+    adc1_config_channel_atten(i->pin, ADC_ATTEN_DB);
   }
 }
 
