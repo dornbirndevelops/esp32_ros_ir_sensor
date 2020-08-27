@@ -8,6 +8,6 @@ int app_main()
     rosserial_setup();
     while(1) {
         rosserial_publish();
-        vTaskDelay(100);
+        vTaskDelay(10);
     }
 }
