@@ -6,8 +6,8 @@
 #include <utility>
 #include <string>
 #include <algorithm>
+#include <esp_system.h>
 #include "sensor_node.h"
-#include "esp_system.h"
 
 #define MAX_FAILED_ATTEMPTS 10
 #define CALIBRATE 0
