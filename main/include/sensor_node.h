@@ -5,9 +5,7 @@
 extern "C" {
 #endif
 
-void rosserial_setup(void);
-
-void rosserial_publish(void);
+void sensor_node_start(void);
 
 #ifdef __cplusplus
 }
