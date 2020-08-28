@@ -82,11 +82,14 @@ void sensor_node_read_task(void* param)
     auto distance = adc_value;
     #else
     auto distance = 1 / (sensor->A * adc_value + sensor->B) - sensor->K;
+    
+    #ifdef LOW_PASS
     // Low Pass Filter trying to reduce noise in sensor values
     // Sensor tends to get inaccurate on higher distances
-    // if (distance > LOW_PASS) {
-    //   continue;
-    // }
+    if (distance > LOW_PASS) {
+      continue;
+    }
+    #endif
     #endif
 
     if (semaphore != NULL) {
