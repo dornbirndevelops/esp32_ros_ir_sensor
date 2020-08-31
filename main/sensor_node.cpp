@@ -23,8 +23,8 @@
 #define CALIBRATE 0 // 1 use raw sensor values, 0 use distances
 #define SENSOR_RING 6 // which sensors to use
 #define MAX_FAILED_ATTEMPTS 10 // try to publish x times before restarting the esp
-#define NO_OF_SAMPLES 20 // get this amount of samples per sensor
-#define LOW_PASS 0.65 // distance value defining the maximum reliable value
+#define NO_OF_SAMPLES 100 // get this amount of samples per sensor
+#define LOW_PASS 0.35 // distance value defining the maximum reliable value
 #define ADC_WIDTH ADC_WIDTH_BIT_9 // adc resolution value
 #define ADC_ATTEN_DB ADC_ATTEN_DB_11 // adc attenuation value
 
